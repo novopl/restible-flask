@@ -19,4 +19,4 @@ from __future__ import absolute_import, unicode_literals
 # interface
 from .endpoint import FlaskEndpoint
 
-__version__ = '0.0'
+__version__ = '0.1'
