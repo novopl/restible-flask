@@ -22,7 +22,7 @@ from logging import getLogger
 from urllib.parse import urljoin
 
 # 3rd party imports
-from flask import request
+import flask
 from restible import RestEndpoint
 
 # local imports
@@ -52,21 +52,27 @@ class FlaskEndpoint(RestEndpoint):
         if isinstance(result, RawResponse):
             return result.response
 
-        return json.dumps(result.data), result.status, result.headers
+        response = flask.Response(
+            status=result.status,
+            content_type='application/json',
+            headers=result.headers,
+            data=json.dumps(result.data)
+        )
+        return response
 
     def dispatch(self, **route_params):
         """ Override webapp2 dispatcher. """
-        request.rest_keys = route_params
+        flask.request.rest_keys = route_params
 
-        result = self.call_rest_handler(request.method, request)
+        result = self.call_rest_handler(flask.request.method, flask.request)
         return self.response_from_result(result)
 
     def dispatch_action(self, name, generic, **route_params):
         """ Override webapp2 dispatcher. """
-        request.rest_keys = route_params
+        flask.request.rest_keys = route_params
 
         result = self.call_action_handler(
-            request.method, request, name, generic
+            flask.request.method, flask.request, name, generic
         )
         return self.response_from_result(result)
 
@@ -122,7 +128,10 @@ class FlaskEndpoint(RestEndpoint):
             )
 
             base_url = url_list if meta.generic else url_item
-            url_action = urljoin(base_url, meta.name)
+            url_action = urljoin(
+                base_url,
+                '' if meta.name == '__rest__' else meta.name
+            )
 
             app.add_url_rule(url_action, **action_route)
 
