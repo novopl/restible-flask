@@ -32,7 +32,7 @@ from restible import api_action, api_route, RawResponse
 L = getLogger(__name__)
 
 
-class FlaskEndpoint(RestEndpoint):
+class Endpoint(RestEndpoint):
     """ Endpoint implementation to use in webapp2/AppEngine projects. """
     @classmethod
     def extract_request_data(cls, request):
