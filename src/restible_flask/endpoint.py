@@ -56,7 +56,6 @@ class Endpoint(RestEndpoint):
             status=result.status,
             content_type='application/json',
             headers=result.headers,
-            data=json.dumps(result.data)
         )
         response.set_data(json.dumps(result.data))
         return response
