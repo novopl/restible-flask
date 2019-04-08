@@ -58,6 +58,7 @@ class Endpoint(RestEndpoint):
             headers=result.headers,
             data=json.dumps(result.data)
         )
+        response.set_data(json.dumps(result.data))
         return response
 
     def dispatch(self, **route_params):
